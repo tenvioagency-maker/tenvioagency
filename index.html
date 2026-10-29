@@ -516,8 +516,11 @@ const lm=document.getElementById('lm');let lastF=null;
 function openDoc(k){const draft=Object.values(CFG).some(v=>typeof v==='string'&&v.indexOf('[')>=0);lastF=document.activeElement;
  document.getElementById('lt').textContent=LDt[k];
  document.getElementById('lbd').innerHTML=(draft?'<p class="dr">Borrador: completa los datos marcados en amarillo y haz que lo revise un profesional antes de publicar.</p>':'')+'<p class="note">These documents are provided in Spanish, the language of the governing law.</p>'+LD[k]();
- lm.hidden=false;document.body.style.overflow='hidden';document.getElementById('lc').focus()}
-function closeDoc(){lm.hidden=true;document.body.style.overflow='';if(lastF)lastF.focus()}
+ lm.hidden=false;document.body.style.overflow='hidden';document.getElementById('lc').focus();try{if(location.hash.slice(1)!==HK[k])history.pushState(null,'','#'+HK[k])}catch(e){}}
+const HK={legal:'aviso-legal',privacy:'privacidad',cookies:'cookies',terms:'condiciones'};
+function closeDoc(){lm.hidden=true;document.body.style.overflow='';try{if(Object.values(HK).indexOf(location.hash.slice(1))>=0)history.replaceState(null,'',location.pathname+location.search)}catch(e){}if(lastF)lastF.focus()}
+function fromHash(){const k=Object.keys(HK).find(x=>HK[x]===location.hash.slice(1));if(k)openDoc(k);else if(!lm.hidden){lm.hidden=true;document.body.style.overflow=''}}
+addEventListener('hashchange',fromHash);fromHash();
 document.getElementById('lc').onclick=closeDoc;lm.addEventListener('click',e=>{if(e.target===lm)closeDoc()});
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!lm.hidden)closeDoc()});
 /* hero planet: parallax on mouse move and scroll */

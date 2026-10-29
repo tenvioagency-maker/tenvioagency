@@ -44,10 +44,11 @@ nav.main a:hover{color:var(--white)}nav.main a:hover::after{transform:scaleX(1)}
 .hero{min-height:100svh;position:relative;display:flex;align-items:center;overflow:hidden;padding:7rem 0 5rem}
 .planet{position:absolute;right:-12vmin;top:50%;width:min(88vmin,860px);aspect-ratio:1;margin-top:calc(min(88vmin,860px)/-2);border-radius:50%;
   background:radial-gradient(circle at 28% 22%,#2c2c2c 0,#101010 38%,#050505 70%);
-  box-shadow:inset 6px 8px 30px rgba(255,255,255,.35),inset -40px -50px 120px #000,0 0 120px rgba(216,216,216,.08);animation:drift 14s ease-in-out infinite alternate}
-.planet::after{content:"";position:absolute;inset:-1px;border-radius:50%;background:conic-gradient(from 210deg,rgba(255,255,255,.55),transparent 18%,transparent 82%,rgba(255,255,255,.3));-webkit-mask:radial-gradient(circle,transparent 66%,#000 67%);mask:radial-gradient(circle,transparent 66%,#000 67%);opacity:.5}
+  box-shadow:inset 6px 8px 30px rgba(255,255,255,.35),inset -40px -50px 120px #000,0 0 120px rgba(216,216,216,.08);animation:drift 9s ease-in-out infinite alternate;transform:translate3d(var(--px,0px),var(--py,0px),0);transition:transform .6s ease-out}
+.planet::after{content:"";position:absolute;inset:-1px;border-radius:50%;background:conic-gradient(from 210deg,rgba(255,255,255,.55),transparent 18%,transparent 82%,rgba(255,255,255,.3));-webkit-mask:radial-gradient(circle,transparent 66%,#000 67%);mask:radial-gradient(circle,transparent 66%,#000 67%);opacity:.5;animation:spin 24s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 .ring{position:absolute;right:-12vmin;top:50%;width:min(120vmin,1180px);aspect-ratio:1;margin-top:calc(min(120vmin,1180px)/-2);margin-right:calc((min(88vmin,860px) - min(120vmin,1180px))/2);border:1px solid rgba(216,216,216,.14);border-radius:50%;transform:rotate(-18deg) scaleY(.32)}
-@keyframes drift{to{transform:translate3d(-2vmin,-2vmin,0) scale(1.02)}}
+@keyframes drift{0%{translate:0 0;scale:1}100%{translate:-4vmin -3vmin;scale:1.04}}
 .hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#080808 25%,rgba(8,8,8,.55) 60%,transparent);z-index:1}
 .hero .wrap{position:relative;z-index:2;width:100%}
 .hero h1{font-size:clamp(2.9rem,9.5vw,8.2rem);max-width:11ch}
@@ -179,6 +180,15 @@ html[lang=es] .ind div:first-child::after{content:"Enfoque inicial"}
 #lbd code{color:var(--white)}
 mark{background:rgba(255,224,138,.16);color:#ffe08a;padding:0 .25em;border-radius:3px}
 .dr{border:1px solid #ffe08a;border-radius:6px;padding:.8rem 1rem;color:#ffe08a!important}
+/* photos: put files in an img/ folder next to index.html. Missing files fall back to the dark gradient */
+.ind div{position:relative;isolation:isolate;overflow:hidden}
+.ind div::before{content:'';position:absolute;inset:0;z-index:-1;background-image:linear-gradient(180deg,rgba(8,8,8,.1),rgba(8,8,8,.88)),var(--im,none);background-size:cover;background-position:center;filter:grayscale(.55);transition:transform .8s cubic-bezier(.2,.8,.2,1),filter .6s}
+.ind div:hover::before{transform:scale(1.06);filter:grayscale(0)}
+.ind div:nth-child(1){--im:url(img/fitness.jpg)}.ind div:nth-child(2){--im:url(img/lifestyle.jpg)}.ind div:nth-child(3){--im:url(img/ecommerce.jpg)}
+.ind div:nth-child(4){--im:url(img/services.jpg)}.ind div:nth-child(5){--im:url(img/hospitality.jpg)}.ind div:nth-child(6){--im:url(img/emerging.jpg)}
+.work .vis::after{content:'';position:absolute;inset:0;background-image:linear-gradient(180deg,rgba(8,8,8,.05),rgba(8,8,8,.55)),var(--im,none);background-size:cover;background-position:center;filter:grayscale(.5);transition:transform .9s cubic-bezier(.2,.8,.2,1),filter .6s}
+.work a:hover .vis::after{transform:scale(1.07);filter:grayscale(0)}
+.work a:nth-child(1) .vis{--im:url(img/work-1.jpg)}.work a:nth-child(2) .vis{--im:url(img/work-2.jpg)}.work a:nth-child(3) .vis{--im:url(img/work-3.jpg)}
 @media (max-width:900px){
   .grid,.work,.ind{grid-template-columns:1fr 1fr}.steps{grid-template-columns:1fr 1fr}.contact{grid-template-columns:1fr;gap:2.5rem}
   .ind div:first-child{grid-column:span 2}
@@ -481,6 +491,20 @@ function T(s){return LANG==='es'&&ES[s]||s}
 document.querySelectorAll('option:not([value])').forEach(o=>o.value=o.textContent.trim());
 /* ---- legal documents, payment links, social links (run before translation) ---- */
 function F(v){return v.replace(/\[[^\]]*\]/g,m=>'<mark>'+m+'</mark>')}
+/* card art: vector illustrations as fallback; a photo in img/ named below covers them automatically */
+const SVGW=b=>`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300'><defs><radialGradient id='g' cx='70%' cy='20%' r='80%'><stop offset='0' stop-color='#303030'/><stop offset='1' stop-color='#0a0a0a'/></radialGradient></defs><rect width='400' height='300' fill='url(#g)'/><g fill='none' stroke='#d8d8d8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' opacity='.7'>${b}</g></svg>`;
+const PH=['fitness','lifestyle','ecommerce','services','hospitality','emerging','work-1','work-2','work-3'];
+const BD=[
+`<circle cx='200' cy='115' r='72' opacity='.4'/><circle cx='200' cy='115' r='48' opacity='.3'/><path d='M110 115h180M130 85v60M152 95v40M248 95v40M270 85v60M92 105v20M308 105v20'/>`,
+`<circle cx='200' cy='100' r='36'/><path d='M120 150a80 80 0 0 1 160 0M90 172a110 110 0 0 1 220 0M150 60l-12-12M250 60l12-12M200 48V30'/>`,
+`<path d='M140 85l60-28 60 28v70l-60 28-60-28zM140 85l60 28 60-28M200 113v70M170 71l60 28'/><path d='M100 205h200' opacity='.4'/>`,
+`<path d='M115 90l85-36 85 36zM132 100v52M172 100v52M228 100v52M268 100v52M112 160h176M100 176h200' />`,
+`<path d='M163 60h74c0 42-12 64-37 68-25-4-37-26-37-68zM200 128v46M168 176h64M170 92h60'/><circle cx='290' cy='80' r='3'/><circle cx='110' cy='110' r='2'/>`,
+`<path d='M125 170v-24h32v24M184 170v-48h32v48M243 170v-78h32v78M112 170h176'/><path d='M135 120l50-30 40 18 50-44M262 64h28v28'/>`,
+`<circle cx='200' cy='115' r='64' opacity='.35'/><path d='M120 115h160M140 88v54M162 98v34M238 98v34M260 88v54M76 52h28M76 52v28M324 52h-28M324 52v28M76 220h28M76 220v-28M324 220h-28M324 220v-28'/>`,
+`<rect x='158' y='46' width='84' height='150' rx='14'/><path d='M180 76h40M180 96h40M196 130l18 11-18 11z'/><circle cx='200' cy='178' r='5'/>`,
+`<rect x='105' y='60' width='190' height='125' rx='8'/><path d='M105 86h190M130 130l-14 14 14 14M270 130l14 14-14 14M214 116l-26 44'/><circle cx='122' cy='73' r='2'/><circle cx='134' cy='73' r='2'/>`];
+[...document.querySelectorAll('.ind div'),...document.querySelectorAll('.work .vis')].forEach((el,i)=>el.style.setProperty('--im',`url(img/${PH[i]}.jpg),url("data:image/svg+xml,${encodeURIComponent(SVGW(BD[i]))}")`));
 const LDt={legal:'Aviso legal',privacy:'Política de privacidad',cookies:'Política de cookies',terms:'Condiciones de contratación'};
 const LD={
 legal:()=>`<p>En cumplimiento del artículo 10 de la Ley 34/2002 (LSSI-CE), se informa de los datos del titular de este sitio web:</p><ul><li>Titular: ${F(CFG.name)}</li><li>NIF: ${F(CFG.nif)}</li><li>Domicilio: ${F(CFG.addr)}</li><li>Correo electrónico: ${CFG.email}</li><li>Actividad: servicios de marketing, creatividad y tecnología</li></ul><h3>Condiciones de uso</h3><p>El acceso y uso de esta web implica la aceptación de estas condiciones. El usuario se compromete a hacer un uso lícito de la web y de sus contenidos.</p><h3>Propiedad intelectual</h3><p>Los contenidos, diseños, marcas y logotipos pertenecen al titular o se usan con autorización, y no pueden reproducirse ni distribuirse sin permiso previo.</p><h3>Responsabilidad</h3><p>El titular no garantiza la ausencia de errores ni la disponibilidad continua del sitio. Los proyectos mostrados como «Concept Project» son ejemplos conceptuales y no trabajos para clientes reales. Los gráficos ilustrativos no reflejan resultados reales ni garantizan resultados futuros.</p><h3>Ley aplicable</h3><p>Este sitio se rige por la legislación española. Las controversias se resolverán ante los tribunales que resulten competentes conforme a la ley.</p>`,
@@ -496,6 +520,15 @@ function openDoc(k){const draft=Object.values(CFG).some(v=>typeof v==='string'&&
 function closeDoc(){lm.hidden=true;document.body.style.overflow='';if(lastF)lastF.focus()}
 document.getElementById('lc').onclick=closeDoc;lm.addEventListener('click',e=>{if(e.target===lm)closeDoc()});
 addEventListener('keydown',e=>{if(e.key==='Escape'&&!lm.hidden)closeDoc()});
+/* hero planet: parallax on mouse move and scroll */
+const PL=document.querySelector('.planet'),RG=document.querySelector('.ring');
+if(PL&&!matchMedia('(prefers-reduced-motion:reduce)').matches){
+ let mx=0,my=0,sy=0,tk=false;
+ const ap=()=>{tk=false;PL.style.setProperty('--px',(mx*-28)+'px');PL.style.setProperty('--py',(my*-20+sy*.12)+'px');if(RG)RG.style.translate=(mx*14)+'px '+(my*10+sy*.06)+'px'};
+ const rq=()=>{if(!tk){tk=true;requestAnimationFrame(ap)}};
+ addEventListener('pointermove',e=>{mx=e.clientX/innerWidth-.5;my=e.clientY/innerHeight-.5;rq()},{passive:true});
+ addEventListener('scroll',()=>{sy=Math.min(scrollY,innerHeight);rq()},{passive:true});
+}
 const oldLegal=document.getElementById('legal');if(oldLegal)oldLegal.remove();
 document.querySelector('nav[aria-label=Legal]').insertAdjacentHTML('afterbegin',`<a href='#legal'>Legal Notice</a>`);
 const MP={'Legal Notice':'legal','Privacy Policy':'privacy','Cookie Policy':'cookies','Terms & Conditions':'terms'};
